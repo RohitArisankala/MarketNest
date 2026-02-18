@@ -40,15 +40,23 @@ const Register = () => {
             showToast(`Welcome to MarketNest as a ${role === 'brand' ? 'Brand' : 'Shopper'}!`, 'auth');
             navigate(role === 'brand' ? '/brand/dashboard' : '/marketplace');
         } catch (err: any) {
+            console.error("Registration Error:", err);
+
+            const errorMsg = err.response?.data?.message
+                ? (typeof err.response.data.message === 'object' ? JSON.stringify(err.response.data.message) : err.response.data.message)
+                : err.message || 'Registration failed';
+
             const debugInfo = {
                 message: err.message,
                 response: err.response?.data,
                 status: err.response?.status,
-                apiUrl: import.meta.env.VITE_API_URL
+                apiUrl: import.meta.env.VITE_API_URL,
+                finalErrorMsg: errorMsg
             };
-            alert(JSON.stringify(debugInfo, null, 2));
-            setError(err.response?.data?.message || 'Registration failed');
-            showToast(err.response?.data?.message || 'Registration failed', 'error');
+            alert("DEBUG: " + JSON.stringify(debugInfo, null, 2));
+
+            setError(String(errorMsg));
+            showToast(String(errorMsg), 'error');
         } finally {
             setLoading(false);
         }
