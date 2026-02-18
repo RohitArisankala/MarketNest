@@ -10,7 +10,7 @@ const generateToken = (res, userId) => {
     res.cookie('jwt', token, {
         httpOnly: true,
         secure: process.env.NODE_ENV !== 'development',
-        sameSite: 'lax',
+        sameSite: process.env.NODE_ENV === 'development' ? 'lax' : 'none',
         maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
     });
 };
@@ -21,7 +21,7 @@ const generateToken = (res, userId) => {
 const googleCallback = (req, res) => {
     generateToken(res, req.user._id);
     // Redirect to frontend
-    res.redirect('http://localhost:5173/marketplace');
+    res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:5173'}/marketplace`);
 };
 
 // @desc    Login user
