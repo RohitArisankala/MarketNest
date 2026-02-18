@@ -127,11 +127,18 @@ const Home = () => {
                                         )}
                                     </>
                                 ) : (
-                                    <Link to="/register">
-                                        <Button3D variant="secondary" className="flex items-center gap-2 text-lg px-8 py-4">
-                                            Get Started <ArrowRight size={20} />
-                                        </Button3D>
-                                    </Link>
+                                    <div className="flex gap-4">
+                                        <Link to="/register">
+                                            <Button3D variant="secondary" className="flex items-center gap-2 text-lg px-8 py-4">
+                                                Get Started <ArrowRight size={20} />
+                                            </Button3D>
+                                        </Link>
+                                        <Link to="/login">
+                                            <Button3D className="flex items-center gap-2 text-lg px-8 py-4 bg-transparent border border-warm-200/20 hover:bg-warm-200/10">
+                                                Login
+                                            </Button3D>
+                                        </Link>
+                                    </div>
                                 )}
                             </motion.div>
                         </motion.div>

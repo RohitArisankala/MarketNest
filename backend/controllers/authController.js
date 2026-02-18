@@ -20,8 +20,15 @@ const generateToken = (res, userId) => {
 // @access  Public
 const googleCallback = (req, res) => {
     generateToken(res, req.user._id);
+
+    // Determine redirect path based on role
+    let redirectPath = '/marketplace'; // Default
+    if (req.user.role === 'brand') {
+        redirectPath = '/brand/dashboard';
+    }
+
     // Redirect to frontend
-    res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:5173'}/marketplace`);
+    res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:5173'}${redirectPath}`);
 };
 
 // @desc    Login user
