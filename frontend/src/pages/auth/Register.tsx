@@ -216,7 +216,7 @@ const Register = () => {
                     <button
                         type="button"
                         className="w-full flex items-center justify-center gap-3 py-2.5 px-4 rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.02)] hover:bg-[rgba(255,255,255,0.05)] text-[#d4b89e] text-sm font-medium transition-all duration-200 mb-4"
-                        onClick={() => window.location.href = `http://localhost:5000/api/auth/google?role=${role}`}
+                        onClick={() => window.location.href = `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/auth/google?role=${role}`}
                     >
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M23.52 12.29C23.52 11.43 23.44 10.61 23.3 9.82H12V14.46H18.46C18.18 15.93 17.33 17.18 16.06 18.03V20.98H19.95C22.23 18.88 23.52 15.82 23.52 12.29Z" fill="#4285F4" />
