@@ -46,15 +46,6 @@ const Register = () => {
                 ? (typeof err.response.data.message === 'object' ? JSON.stringify(err.response.data.message) : err.response.data.message)
                 : err.message || 'Registration failed';
 
-            const debugInfo = {
-                message: err.message,
-                response: err.response?.data,
-                status: err.response?.status,
-                apiUrl: import.meta.env.VITE_API_URL,
-                finalErrorMsg: errorMsg
-            };
-            alert("DEBUG: " + JSON.stringify(debugInfo, null, 2));
-
             setError(String(errorMsg));
             showToast(String(errorMsg), 'error');
         } finally {
