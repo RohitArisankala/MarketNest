@@ -58,7 +58,7 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.options('*', cors(corsOptions)); // Enable pre-flight for all routes
+app.options('{*path}', cors(corsOptions)); // Enable pre-flight for all routes (Express 5 syntax)
 
 app.use(passport.initialize());
 
