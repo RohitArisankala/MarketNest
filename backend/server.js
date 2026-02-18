@@ -15,9 +15,14 @@ const app = express();
 app.set('trust proxy', 1);
 
 // Ensure uploads directory exists
+// Ensure uploads directory exists (Only in development or if writable)
 const uploadsDir = path.join(__dirname, 'uploads');
-if (!fs.existsSync(uploadsDir)) {
-    fs.mkdirSync(uploadsDir, { recursive: true });
+try {
+    if (!fs.existsSync(uploadsDir)) {
+        fs.mkdirSync(uploadsDir, { recursive: true });
+    }
+} catch (error) {
+    console.warn("Could not create uploads directory (expected in serverless environment):", error.message);
 }
 
 app.use(express.json());
