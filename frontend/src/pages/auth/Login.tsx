@@ -133,7 +133,7 @@ const Login = () => {
                                 alert('VITE_API_URL is missing! Please configure it in Vercel Settings.');
                                 return;
                             }
-                            window.location.href = `${apiUrl}/api/auth/google`;
+                            window.location.href = `${apiUrl}/auth/google`;
                         }}
                     >
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
