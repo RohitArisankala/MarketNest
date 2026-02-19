@@ -9,8 +9,12 @@ const generateToken = (res, userId) => {
 
     res.cookie('jwt', token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV !== 'development',
-        sameSite: process.env.NODE_ENV === 'development' ? 'lax' : 'none',
+        // Always use secure/none to support:
+        // 1. Localhost Frontend + Render Backend (Cross-site)
+        // 2. Vercel Frontend + Render Backend (Cross-site)
+        // 3. Localhost + Localhost (Secure context exception)
+        secure: true,
+        sameSite: 'none',
         maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
     });
 };
@@ -107,6 +111,8 @@ const registerUser = async (req, res) => {
 const logoutUser = (req, res) => {
     res.cookie('jwt', '', {
         httpOnly: true,
+        secure: true,
+        sameSite: 'none',
         expires: new Date(0),
     });
     res.status(200).json({ message: 'Logged out successfully' });

@@ -30,7 +30,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                 const { data } = await api.get('/auth/me');
                 setUser(data);
                 localStorage.setItem('userInfo', JSON.stringify(data));
-            } catch {
+            } catch (error) {
+                console.error('Auth check failed:', error);
                 setUser(null);
                 localStorage.removeItem('userInfo');
             } finally {
