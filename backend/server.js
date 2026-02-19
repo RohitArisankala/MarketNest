@@ -69,6 +69,10 @@ app.get('/', (req, res) => {
     res.send('MarketNest API is running...');
 });
 
+app.get('/api/health', (req, res) => {
+    res.status(200).json({ status: 'ok', message: 'Server is healthy and awake' });
+});
+
 // Routes
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/products', require('./routes/productRoutes'));

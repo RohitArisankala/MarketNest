@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import axios from 'axios';
 import { motion } from 'framer-motion';
 import { useNavigate, Link } from 'react-router-dom';
 import Button3D from '../../components/ui/Button3D';
@@ -13,6 +14,7 @@ const Login = () => {
     const [showPw, setShowPw] = useState(false);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+    const [googleLoading, setGoogleLoading] = useState(false);
     const { login } = useAuth();
     const { showToast } = useToast();
     const navigate = useNavigate();
@@ -126,23 +128,39 @@ const Login = () => {
 
                     <button
                         type="button"
-                        className="w-full flex items-center justify-center gap-3 py-2.5 px-4 rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.02)] hover:bg-[rgba(255,255,255,0.05)] text-[#d4b89e] text-sm font-medium transition-all duration-200 mb-5"
-                        onClick={() => {
+                        disabled={googleLoading}
+                        className="w-full flex items-center justify-center gap-3 py-2.5 px-4 rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.02)] hover:bg-[rgba(255,255,255,0.05)] text-[#d4b89e] text-sm font-medium transition-all duration-200 mb-5 disabled:opacity-50 disabled:cursor-not-allowed"
+                        onClick={async () => {
                             const apiUrl = import.meta.env.VITE_API_URL;
                             if (!apiUrl) {
                                 alert('VITE_API_URL is missing! Please configure it in Vercel Settings.');
                                 return;
                             }
-                            window.location.href = `${apiUrl}/auth/google`;
+
+                            setGoogleLoading(true);
+                            try {
+                                // "Wake up" the backend
+                                await axios.get(`${apiUrl}/health`);
+                            } catch (error) {
+                                console.log('Backend wake-up failed or already awake (status check)', error);
+                                // Proceed anyway, maybe it was a CORS error on health check but auth might still work
+                            } finally {
+                                window.location.href = `${apiUrl}/auth/google`;
+                                // Note: we don't setGoogleLoading(false) because the page will redirect
+                            }
                         }}
                     >
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M23.52 12.29C23.52 11.43 23.44 10.61 23.3 9.82H12V14.46H18.46C18.18 15.93 17.33 17.18 16.06 18.03V20.98H19.95C22.23 18.88 23.52 15.82 23.52 12.29Z" fill="#4285F4" />
-                            <path d="M12 24C15.24 24 17.96 22.92 19.95 21.09L16.06 18.14C14.98 18.86 13.61 19.3 12 19.3C8.87 19.3 6.22 17.18 5.27 14.33H1.26V17.44C3.26 21.41 7.37 24 12 24Z" fill="#34A853" />
-                            <path d="M5.27 14.29C5.02 13.53 4.89 12.73 4.89 11.91C4.89 11.09 5.03 10.29 5.27 9.53V6.42H1.26C0.46 8.02 0 9.89 0 11.91C0 13.93 0.45 15.8 1.25 17.39L5.27 14.29Z" fill="#FBBC05" />
-                            <path d="M12 4.75C13.76 4.75 15.35 5.36 16.59 6.55L20.03 3.11C17.95 1.17 15.23 0 12 0C7.37 0 3.26 2.59 1.26 6.56L5.27 9.67C6.22 6.82 8.87 4.75 12 4.75Z" fill="#EA4335" />
-                        </svg>
-                        Continue with Google
+                        {googleLoading ? (
+                            <div className="w-5 h-5 border-2 border-[#d4b89e] border-t-transparent rounded-full animate-spin" />
+                        ) : (
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M23.52 12.29C23.52 11.43 23.44 10.61 23.3 9.82H12V14.46H18.46C18.18 15.93 17.33 17.18 16.06 18.03V20.98H19.95C22.23 18.88 23.52 15.82 23.52 12.29Z" fill="#4285F4" />
+                                <path d="M12 24C15.24 24 17.96 22.92 19.95 21.09L16.06 18.14C14.98 18.86 13.61 19.3 12 19.3C8.87 19.3 6.22 17.18 5.27 14.33H1.26V17.44C3.26 21.41 7.37 24 12 24Z" fill="#34A853" />
+                                <path d="M5.27 14.29C5.02 13.53 4.89 12.73 4.89 11.91C4.89 11.09 5.03 10.29 5.27 9.53V6.42H1.26C0.46 8.02 0 9.89 0 11.91C0 13.93 0.45 15.8 1.25 17.39L5.27 14.29Z" fill="#FBBC05" />
+                                <path d="M12 4.75C13.76 4.75 15.35 5.36 16.59 6.55L20.03 3.11C17.95 1.17 15.23 0 12 0C7.37 0 3.26 2.59 1.26 6.56L5.27 9.67C6.22 6.82 8.87 4.75 12 4.75Z" fill="#EA4335" />
+                            </svg>
+                        )}
+                        {googleLoading ? 'Connecting...' : 'Continue with Google'}
                     </button>
 
                     <p style={{ color: '#8e6f5a', textAlign: 'center', fontSize: 13 }}>
